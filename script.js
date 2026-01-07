@@ -37,16 +37,19 @@ class RaffleManager {
             return;
         }
 
-        // Check for duplicates (same name AND class)
-        if (this.participants.some(p => 
+        // Check if participant already exists - add tickets instead of creating duplicate
+        const existing = this.participants.find(p => 
             p.name.toLowerCase() === name.toLowerCase() && 
             p.class.toLowerCase() === studentClass.toLowerCase()
-        )) {
-            alert('This participant (name + class) already exists!');
-            return;
+        );
+        
+        if (existing) {
+            existing.weight += weight;
+            alert(`Added ${weight} ticket(s) to ${name}. Total tickets: ${existing.weight}`);
+        } else {
+            this.participants.push({ name, class: studentClass, weight, id: Date.now() });
         }
-
-        this.participants.push({ name, class: studentClass, weight, id: Date.now() });
+        
         this.renderParticipants();
         
         // Clear inputs
@@ -66,7 +69,7 @@ class RaffleManager {
         }
 
         let added = 0;
-        let duplicates = 0;
+        let updated = 0;
 
         lines.forEach(line => {
             line = line.trim();
@@ -78,10 +81,17 @@ class RaffleManager {
             const studentClass = parts[1] || 'N/A';
             const weight = parseInt(parts[2]) || 1;
             
-            if (name && !this.participants.some(p => 
+            if (!name) return;
+            
+            const existing = this.participants.find(p => 
                 p.name.toLowerCase() === name.toLowerCase() && 
                 p.class.toLowerCase() === studentClass.toLowerCase()
-            )) {
+            );
+            
+            if (existing) {
+                existing.weight += weight;
+                updated++;
+            } else {
                 this.participants.push({ 
                     name, 
                     class: studentClass, 
@@ -89,15 +99,17 @@ class RaffleManager {
                     id: Date.now() + Math.random() 
                 });
                 added++;
-            } else if (name) {
-                duplicates++;
             }
         });
 
         this.renderParticipants();
         textarea.value = '';
 
-        alert(`Added ${added} participant(s). ${duplicates > 0 ? `Skipped ${duplicates} duplicate(s).` : ''}`);
+        let message = `Added ${added} new participant(s).`;
+        if (updated > 0) {
+            message += ` Updated tickets for ${updated} existing participant(s).`;
+        }
+        alert(message);
     }
 
     removeParticipant(id) {
@@ -160,12 +172,19 @@ class RaffleManager {
             await this.animateDrawing(availableParticipants);
             
             const winner = this.selectWinner(availableParticipants, useWeights);
-            this.winners.push(winner);
+            this.winners.push({...winner});
 
-            // Remove winner if duplicates not allowed
+            // Subtract one ticket from winner if duplicates not allowed
             if (!allowDuplicates) {
-                const index = availableParticipants.findIndex(p => p.id === winner.id);
-                availableParticipants.splice(index, 1);
+                const winnerInPool = availableParticipants.find(p => p.id === winner.id);
+                if (winnerInPool) {
+                    winnerInPool.weight -= 1;
+                    // Remove from pool if no tickets left
+                    if (winnerInPool.weight <= 0) {
+                        const index = availableParticipants.findIndex(p => p.id === winner.id);
+                        availableParticipants.splice(index, 1);
+                    }
+                }
             }
 
             await this.delay(1000);
