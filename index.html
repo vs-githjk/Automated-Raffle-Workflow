@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raffle Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎉 Raffle Manager</h1>
+            <p>Manage your giveaways with style</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Left Panel: Participant Management -->
+            <div class="panel participants-panel">
+                <h2>Add Participants</h2>
+                
+                <div class="input-group">
+                    <input type="text" id="participantName" placeholder="Enter participant name" />
+                    <select id="participantClass">
+                        <option value="N/A">N/A</option>
+                        <option value="1A">1A</option>
+                        <option value="1B">1B</option>
+                        <option value="1C">1C</option>
+                        <option value="1D">1D</option>
+                        <option value="2A">2A</option>3A, 3&#10;Or: Jane Doe, N/A, 1&#10;Or: Bob Lee, 12C
+                        <option value="2B">2B</option>
+                        <option value="2C">2C</option>
+                        <option value="2D">2D</option>
+                        <option value="3A">3A</option>
+                        <option value="3B">3B</option>
+                        <option value="3C">3C</option>
+                        <option value="3D">3D</option>
+                        <option value="4A">4A</option>
+                        <option value="4B">4B</option>
+                        <option value="4C">4C</option>
+                        <option value="4D">4D</option>
+                        <option value="5A">5A</option>
+                        <option value="5B">5B</option>
+                        <option value="5C">5C</option>
+                        <option value="5D">5D</option>
+                        <option value="6A">6A</option>
+                        <option value="6B">6B</option>
+                        <option value="6C">6C</option>
+                        <option value="6D">6D</option>
+                        <option value="7A">7A</option>
+                        <option value="7B">7B</option>
+                        <option value="7C">7C</option>
+                        <option value="7D">7D</option>
+                        <option value="8A">8A</option>
+                        <option value="8B">8B</option>
+                        <option value="8C">8C</option>
+                        <option value="8D">8D</option>
+                        <option value="9A">9A</option>
+                        <option value="9B">9B</option>
+                        <option value="9C">9C</option>
+                        <option value="9D">9D</option>
+                        <option value="10A">10A</option>
+                        <option value="10B">10B</option>
+                        <option value="10C">10C</option>
+                        <option value="10D">10D</option>
+                        <option value="11A">11A</option>
+                        <option value="11B">11B</option>
+                        <option value="11C">11C</option>
+                        <option value="11D">11D</option>
+                        <option value="11E">11E</option>
+                        <option value="12A">12A</option>
+                        <option value="12B">12B</option>
+                        <option value="12C">12C</option>
+                        <option value="12D">12D</option>
+                        <option value="12E">12E</option>
+                    </select>
+                    <input type="number" id="participantWeight" placeholder="Tickets (1-10)" min="1" max="10" value="1" />
+                    <button id="addParticipant" class="btn btn-primary">Add</button>
+                </div>
+
+                <div class="input-group">
+                    <textarea id="bulkParticipants" placeholder="Or paste multiple (one per line)&#10;Format: Name, Class, Tickets&#10;Example: John Smith, 2024, 3&#10;Or: Jane Doe, N/A, 1&#10;Or: Bob Lee, 2025"></textarea>
+                    <button id="bulkAdd" class="btn btn-secondary">Add All</button>
+                </div>
+
+                <div class="participants-list">
+                    <div class="list-header">
+                        <h3>Participants (<span id="participantCount">0</span>)</h3>
+                        <button id="clearAll" class="btn btn-danger">Clear All</button>
+                    </div>
+                    <ul id="participantsList"></ul>
+                </div>
+            </div>
+
+            <!-- Right Panel: Drawing & Winners -->
+            <div class="panel drawing-panel">
+                <h2>Draw Winners</h2>
+                
+                <div class="draw-settings">
+                    <div class="setting-item">
+                        <label for="numWinners">Number of Winners:</label>
+                        <input type="number" id="numWinners" min="1" value="1" />
+                    </div>
+                    <div class="setting-item">
+                        <label for="allowDuplicates">
+                            <input type="checkbox" id="allowDuplicates" />
+                            Allow duplicate winners
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="useWeights">
+                            <input type="checkbox" id="useWeights" checked />
+                            Use weighted drawing
+                        </label>
+                    </div>
+                </div>
+
+                <button id="startDraw" class="btn btn-success btn-large">
+                    Start Drawing
+                </button>
+
+                <!-- Animation Area -->
+                <div id="animationArea" class="animation-area hidden">
+                    <div class="roulette">
+                        <div id="rouletteWheel" class="roulette-wheel"></div>
+                    </div>
+                    <div id="currentName" class="current-name"></div>
+                </div>
+
+                <!-- Winners Display -->
+                <div id="winnersArea" class="winners-area hidden">
+                    <h3>🏆 Winners</h3>
+                    <ul id="winnersList"></ul>
+                    <div class="winner-actions">
+                        <button id="exportResults" class="btn btn-primary">Export Results</button>
+                        <button id="resetDraw" class="btn btn-secondary">New Draw</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
