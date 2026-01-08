@@ -21,7 +21,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
     min-height: 100vh;
     padding: 2rem;
     color: var(--text-dark);
@@ -271,7 +271,7 @@ input[type="checkbox"] {
 }
 
 .animation-area {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
     border-radius: 12px;
     padding: 2rem;
     text-align: center;
