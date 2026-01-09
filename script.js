@@ -169,13 +169,14 @@ class RaffleManager {
 
         // Draw winners with animation
         for (let i = 0; i < numWinners; i++) {
-            await this.animateDrawing(availableParticipants);
-            
             const winner = this.selectWinner(availableParticipants, useWeights);
+            await this.animateDrawing(availableParticipants, winner);
+            
             this.winners.push({...winner});
 
             // Subtract one ticket from winner if duplicates not allowed
             if (!allowDuplicates) {
+                // Update the temporary pool
                 const winnerInPool = availableParticipants.find(p => p.id === winner.id);
                 if (winnerInPool) {
                     winnerInPool.weight -= 1;
@@ -184,6 +185,17 @@ class RaffleManager {
                         const index = availableParticipants.findIndex(p => p.id === winner.id);
                         availableParticipants.splice(index, 1);
                     }
+                }
+                
+                // Update the actual participant list
+                const actualParticipant = this.participants.find(p => p.id === winner.id);
+                if (actualParticipant) {
+                    actualParticipant.weight -= 1;
+                    // Remove from main list if no tickets left
+                    if (actualParticipant.weight <= 0) {
+                        this.participants = this.participants.filter(p => p.id !== winner.id);
+                    }
+                    this.renderParticipants();
                 }
             }
 
@@ -194,7 +206,7 @@ class RaffleManager {
         this.showWinners();
     }
 
-    async animateDrawing(participants) {
+    async animateDrawing(participants, winner) {
         const wheel = document.getElementById('rouletteWheel');
         const currentName = document.getElementById('currentName');
         
@@ -209,9 +221,13 @@ class RaffleManager {
                     `<span class="roulette-name">${this.escapeHtml(p.name)}</span>`
                 ).join('');
 
-                // Show current name
-                const randomParticipant = participants[Math.floor(Math.random() * participants.length)];
-                currentName.textContent = randomParticipant.name;
+                // Show current name - use winner on last iteration
+                if (iterations >= maxIterations - 1) {
+                    currentName.textContent = winner.name;
+                } else {
+                    const randomParticipant = participants[Math.floor(Math.random() * participants.length)];
+                    currentName.textContent = randomParticipant.name;
+                }
 
                 iterations++;
                 
